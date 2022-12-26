@@ -1,19 +1,21 @@
 package Model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Car {
 
     private State state;
     private String number;
-    private int time;
+    LocalDateTime ld;
 
-    public int getTime() {
-        return time;
+    public LocalDateTime getLd() {
+        return ld;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void setLd(LocalDateTime ld) {
+        this.ld = ld;
     }
 
     private int price;
@@ -27,13 +29,12 @@ public class Car {
     }
 
 
-
-    public String generateNumber(){
+    public String generateNumber() {
         int l = 5;
         String character = "1234567890QWERTYUIOOPASDFGHJKLZXCVBNM";
         StringBuilder s = new StringBuilder(l);
         for (int i = 0; i < l; i++) {
-            int ch = (int)(character.length()*Math.random());
+            int ch = (int) (character.length() * Math.random());
             s.append(character.charAt(ch));
         }
         String number = this.number;
@@ -41,18 +42,6 @@ public class Car {
 
         return number;
 
-    }
-    public  State changeStatus(Car car){
-        java.util.Random r = new java.util.Random();
-        int chance = r.nextInt(100)+1;
-        State state = this.state;
-        if (chance <= 3 && car.getState().equals(State.ON_RIDE)){
-            setState(State.IN_PARK);
-        } else if (chance<=3 && car.getState().equals(State.IN_PARK)) {
-            setState(State.ON_RIDE);
-
-        }
-        return state;
     }
 
     public State getState() {
@@ -72,25 +61,25 @@ public class Car {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return price == car.price && state == car.state && Objects.equals(number, car.number) && Objects.equals(ld, car.ld);
+    }
+
+    @Override
     public String toString() {
         return "Car{" +
                 "state=" + state +
                 ", number='" + number + '\'' +
-                ", time=" + time +
+                ", ld=" + ld +
                 ", price=" + price +
                 '}';
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Car car = (Car) o;
-        return time == car.time && price == car.price && state == car.state && Objects.equals(number, car.number);
-    }
-
-    @Override
     public int hashCode() {
-        return Objects.hash(state, number, time, price);
+        return Objects.hash(state, number, ld, price);
     }
 }
