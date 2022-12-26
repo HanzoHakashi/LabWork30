@@ -15,30 +15,33 @@ public class Simulation {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusDays(30);
         LocalDateTime end2=LocalDateTime.now().plusMinutes(5);
-        LocalDateTime end3=LocalDateTime.now().plusMinutes(30);
-        String AM = "09:00:00";
         int time=1;
 
         for (LocalDateTime date = start;date.isBefore(end);date=date.plusDays(1)) {
-            for (LocalDateTime j = start;j.isBefore(end2)  ; j=j.plusMinutes(1)) {
+            for (LocalDateTime j = start;j.isBefore(LocalDateTime.now().plusMinutes(5))  ; j=j.plusMinutes(1)) {
                 for (var str:city) {
                     str.setLd(State.ON_RIDE.saveTime(str,j));
+                    journal.add(str);
                     park.removeIf(e->str.getState().equals(State.ON_RIDE));
                     if (str.getState().equals(State.IN_PARK)&&park.size()<20){
                         str.setLd(str.getLd().plusMinutes(time++));
                         park.add(str);
                     } else if (j.isBefore(j.plusMinutes(30)) && j.getHour()>9 && j.getHour()<21 ) {
-                        str.setPrice(time*2);
+                        str.setPrice(j.getMinute()*2);
+                        int price= str.getPrice()+str.getPrice();
                     }
-                    journal.add(str);
+
                 }
 
             }
         }
-        System.out.println(park.size());
-        System.out.println(park.toString());
-        System.out.println(journal.toString());
-        System.out.println(journal.size());
+        System.out.printf("На данный момент на парковке находится %s машин.%n",park.size());
+        System.out.printf("В общем за этот месяц на парковку заехало и уехало %s машин.%n",journal.size());
+        int price=0;
+        for (var str:journal) {
+            price+=str.getPrice();
+        }
+        System.out.printf("Общая прибыль составила %s.%n",price);
     }
 
     public Set<Car> getCity(){
